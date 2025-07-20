@@ -14,6 +14,7 @@ import MyApplications from "../Home/Dash/MyApplications";
 import AddReview from "../Home/Dash/AddReview";
 import Profileup from "../Home/Dash/Profileup";
 import ApplyScholarship from "../component/ApplyScholarship";
+import ScholarshipDetailsPage from "../Home/Dash/ScholarshipDetailsPage";
 
 export const router = createBrowserRouter([
   {
@@ -65,6 +66,10 @@ export const router = createBrowserRouter([
       {
         path: "update-profile",
         Component: Profileup,
+      },
+      {
+        path: "scholarship/:id",
+        Component: ScholarshipDetailsPage
       },
     ],
   },

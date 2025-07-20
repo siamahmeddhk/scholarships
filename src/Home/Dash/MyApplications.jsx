@@ -3,11 +3,15 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { useAuthContext } from "../../context/AuthContext";
 import AddReview from "./AddReview";
+import {useNavigate } from "react-router";
+
 
 const MyApplications = () => {
   const { user } = useAuthContext();
   const [applications, setApplications] = useState([]);
   const [selectedApp, setSelectedApp] = useState(null);
+const navigate = useNavigate();
+
 
   useEffect(() => {
     if (user?.email) {
@@ -74,7 +78,7 @@ const MyApplications = () => {
                       <button
                         className="bg-green-600 text-white px-3 py-1 rounded text-xs"
                         onClick={() => {
-                          // navigate(`/scholarship/${app.scholarshipId}`)
+                          navigate(`/dashboard/scholarship/${app.scholarshipId}`)
                         }}
                       >
                         Details
