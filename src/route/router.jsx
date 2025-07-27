@@ -130,6 +130,8 @@ import UpdateApplicationForm from "../Home/Dash/UpdateApplicationForm";
 // Moderator
 import ModeratorApplications from "../Home/Modarators/ModeratorApplications";
 import ModeratorRoute from "../Home/Modarators/ModeratorRoute";
+import MyReviews from "../component/MyReviews";
+import AddScholarship from "../Home/Modarators/AddScholarship";
 
 export const router = createBrowserRouter([
   {
@@ -150,6 +152,7 @@ export const router = createBrowserRouter([
     children: [
       { path: "user-home", element: <UserHome /> },
       { path: "my-applications", element: <MyApplications /> },
+      { path: "reviews", element: <MyReviews /> },  
       { path: "update-profile", element: <Profileup /> },
       { path: "scholarship/:id", element: <ScholarshipDetailsPage /> },
       { path: "UpdateApplicationForm/:id", element: <UpdateApplicationForm /> },
@@ -163,6 +166,22 @@ export const router = createBrowserRouter([
           </ModeratorRoute>
         ),
       },
+      {
+  path: "moderator-reviews",
+  element: (
+    <ModeratorRoute>
+      <MyReviews />
+    </ModeratorRoute>
+  ),
+},
+{
+  path: "moderator-add-scholarship",
+  element: (
+    <ModeratorRoute>
+      <AddScholarship />
+    </ModeratorRoute>
+  ),
+},
     ],
   },
 ]);

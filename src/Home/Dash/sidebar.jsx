@@ -1,37 +1,63 @@
-import { Link } from "react-router";
+import { Link } from "react-router"; // Use react-router-dom
 import { useAuthContext } from "../../context/AuthContext";
 import useRole from "../../hook/useRole";
 
-
 const Sidebar = () => {
   const { user } = useAuthContext();
-  const { role, isLoading } = useRole(user?.email); // 👈 get role of user
+  const { role, isLoading } = useRole(user?.email);
 
-  if (isLoading) return <div className="text-white p-4">Loading sidebar...</div>;
+  if (isLoading)
+    return (
+      <div className="text-white p-4 text-center font-semibold">
+        Loading sidebar...
+      </div>
+    );
+
+  // Common link styles for better UI
+  const linkClasses =
+    "block px-4 py-2 rounded hover:bg-blue-600 transition-colors duration-300";
 
   return (
-    <div className="w-64 bg-gray-800 text-white p-4">
-      <div className="text-center mb-6">
-        {user?.photoURL && (
+    <div className="w-64 bg-gradient-to-b from-indigo-900 via-indigo-800 to-indigo-700 text-white p-6 min-h-screen shadow-lg">
+      <div className="text-center mb-8">
+        {user?.photoURL ? (
           <img
             src={user.photoURL}
             alt="User"
-            className="w-16 h-16 rounded-full mx-auto mb-2"
+            className="w-20 h-20 rounded-full mx-auto mb-3 border-2 border-white shadow-md"
           />
+        ) : (
+          <div className="w-20 h-20 rounded-full mx-auto mb-3 bg-indigo-600 flex items-center justify-center text-3xl font-bold shadow-md">
+            {user?.displayName?.charAt(0) || "U"}
+          </div>
         )}
-        <p className="font-semibold">{user?.displayName}</p>
-        <p className="text-sm">{user?.email}</p>
+        <p className="text-lg font-semibold">{user?.displayName || "User"}</p>
+        <p className="text-sm truncate max-w-full">{user?.email}</p>
       </div>
 
       {/* User Menu */}
       {role === "user" && (
         <>
-          <h2 className="text-xl font-bold mb-4 border-b border-white pb-2">User Menu</h2>
-          <ul className="space-y-4">
-            <li><Link to="/dashboard/user-home">Dashboard Home</Link></li>
-            <li><Link to="/dashboard/my-applications">My Applications</Link></li>
-            <li><Link to="/dashboard/reviews">Add Review</Link></li>
-            <li><Link to="/dashboard/update-profile">Update Profile</Link></li>
+          <h2 className="text-xl font-bold mb-4 border-b border-white pb-2">
+            User Menu
+          </h2>
+          <ul className="space-y-3">
+            <li>
+              <Link to="/dashboard/user-home" className={linkClasses}>
+                🏠 Dashboard Home
+              </Link>
+            </li>
+            <li>
+              <Link to="/dashboard/my-applications" className={linkClasses}>
+                📋 My Applications
+              </Link>
+            </li>
+            <li>
+              <Link to="/dashboard/reviews" className={linkClasses}>
+                ✍️ Add Review
+              </Link>
+            </li>
+            
           </ul>
         </>
       )}
@@ -39,11 +65,30 @@ const Sidebar = () => {
       {/* Moderator Menu */}
       {role === "moderator" && (
         <>
-          <h2 className="text-xl font-bold mb-4 border-b border-white pb-2">Moderator Panel</h2>
-          <ul className="space-y-4">
-            <li><Link to="moderator">Dashboard Home</Link></li>
-          <Link to="/dashboard/moderator-applications">All Applications</Link>
-            <li><Link to="/dashboard/manage-reviews">Manage Reviews</Link></li>
+          <h2 className="text-xl font-bold mb-4 border-b border-white pb-2">
+            Moderator Panel
+          </h2>
+          <ul className="space-y-3">
+            <li>
+              <Link to="/dashboard/moderator" className={linkClasses}>
+                🛠️ Dashboard Home
+              </Link>
+            </li>
+            <li>
+              <Link to="/dashboard/moderator-applications" className={linkClasses}>
+                📄 All Applications
+              </Link>
+            </li>
+            <li>
+              <Link to="/dashboard/moderator-reviews" className={linkClasses}>
+                📝 All Reviews
+              </Link>
+            </li>
+             <li>
+        <Link to="/dashboard/moderator-add-scholarship" className={linkClasses}>
+          ➕ Add Scholarship
+        </Link>
+      </li>
           </ul>
         </>
       )}
