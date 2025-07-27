@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTopScholarships } from '../hook/useTopScholarships';
+import { Link } from 'react-router';
 
 const TopScholarships = () => {
   const { data: scholarships, isLoading, isError, error } = useTopScholarships();
@@ -41,9 +42,17 @@ const TopScholarships = () => {
               </p>
             </div>
 
-            <button className="mt-5 w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+            {/* <button className="mt-5 w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
               View Details
+            </button> */}
+             
+              <Link to={`/scholarship/${scholarship._id}`}>
+              <button className="mt-3 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+              Details
             </button>
+            </Link>
+
+
           </div>
         ))}
       </div>
