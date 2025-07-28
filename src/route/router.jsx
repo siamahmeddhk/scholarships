@@ -29,12 +29,14 @@ import Addship from "../Home/Admin/Addship";
 import AdminManageShip from "../Home/Admin/AdminManageShip";
 import AdminManageApply from "../Home/Admin/AdminManageApply";
 import AdminReview from "../Home/Admin/AdminReview";
+import ErrorPage from "../component/Error";
 
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
+    errorElement: <ErrorPage></ErrorPage>,
     children: [
       { path: "/", element: <Home /> },
       { path: "/all-scholarships", element: <AllScholarships /> },
