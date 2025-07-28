@@ -1,8 +1,6 @@
-import { Navigate } from 'react-router';
-
-
-import useRole from '../hook/useRole';
-import { useAuthContext } from '../context/AuthContext';
+import { Navigate } from "react-router";
+import useRole from "../hook/useRole";
+import { useAuthContext } from "../context/AuthContext";
 
 const ModeratorRoute = ({ children }) => {
   const { user } = useAuthContext();
@@ -10,11 +8,12 @@ const ModeratorRoute = ({ children }) => {
 
   if (isLoading) return <p>Loading...</p>;
 
-  if (role !== 'moderator') {
-    return <Navigate to="/" />;
+  // ✅ Allow moderator and admin
+  if (role === "moderator" || role === "admin") {
+    return children;
   }
 
-  return children;
+  return <Navigate to="/" />;
 };
 
 export default ModeratorRoute;
