@@ -1,14 +1,46 @@
+// import React from 'react';
+// import Banner from './Banner';
+// import TopScholarships from '../pages/TopScholarships';
+// import FeedbackSection from '../component/FeedbackSection';
+
+// const Home = () => {
+//     return (
+//         <div>
+//             <Banner></Banner>
+//             <TopScholarships></TopScholarships>
+//             <FeedbackSection></FeedbackSection>
+//         </div>
+//     );
+// };
+
+// export default Home;
+
+
+
+
+
+
+
+
 import React from 'react';
 import Banner from './Banner';
 import TopScholarships from '../pages/TopScholarships';
 import FeedbackSection from '../component/FeedbackSection';
+import ScholarshipStats from '../component/ScholarshipStats'; // ✅ Import the new component
 
 const Home = () => {
+    const statsData = {
+        scholarships: 120,     // Replace with dynamic value later
+        applications: 350,    // Replace with backend data
+        approved: 255,         // Replace with backend data
+    };
+
     return (
         <div>
-            <Banner></Banner>
-            <TopScholarships></TopScholarships>
-            <FeedbackSection></FeedbackSection>
+            <Banner />
+            <TopScholarships />
+            <ScholarshipStats stats={statsData} />  {/* ✅ Added here */}
+            <FeedbackSection />
         </div>
     );
 };

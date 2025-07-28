@@ -30,6 +30,8 @@ import AdminManageShip from "../Home/Admin/AdminManageShip";
 import AdminManageApply from "../Home/Admin/AdminManageApply";
 import AdminReview from "../Home/Admin/AdminReview";
 import ErrorPage from "../component/Error";
+import ModeratorReview from "../Home/Modarators/ModeratorReviews";
+import ModaretorShip from "../Home/Modarators/ModaretorShip";
 
 
 export const router = createBrowserRouter([
@@ -70,7 +72,7 @@ export const router = createBrowserRouter([
         path: "moderator-reviews",
         element: (
           <ModeratorRoute>
-            <MyReviews />
+            <ModeratorReview />
           </ModeratorRoute>
         ),
       },
@@ -79,6 +81,14 @@ export const router = createBrowserRouter([
         element: (
           <ModeratorRoute>
             <AddScholarship />
+          </ModeratorRoute>
+        ),
+      },
+      {
+        path: "moderator-edit-scholarship",
+        element: (
+          <ModeratorRoute>
+            <ModaretorShip />
           </ModeratorRoute>
         ),
       },
