@@ -28,6 +28,7 @@ import AdminRoute from "../Home/Admin/AdminRoute"
 import Addship from "../Home/Admin/Addship";
 import AdminManageShip from "../Home/Admin/AdminManageShip";
 import AdminManageApply from "../Home/Admin/AdminManageApply";
+import AdminReview from "../Home/Admin/AdminReview";
 
 
 export const router = createBrowserRouter([
@@ -104,6 +105,13 @@ export const router = createBrowserRouter([
         path: "admin-manage-apply",
         element: ( <AdminRoute>
           <AdminManageApply></AdminManageApply>
+        </AdminRoute>
+        )
+      },
+      {
+        path: "admin-manage-reviews",
+        element: ( <AdminRoute>
+          <AdminReview></AdminReview>
         </AdminRoute>
         )
       }

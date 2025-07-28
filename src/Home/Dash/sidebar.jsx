@@ -216,7 +216,7 @@ const Sidebar = () => {
               </Link>
             </li>
             <li>
-              <Link to="/dashboard/manage-reviews" className={linkClasses}>
+              <Link to="/dashboard/admin-manage-reviews" className={linkClasses}>
                 📝 Manage Reviews
               </Link>
             </li>
