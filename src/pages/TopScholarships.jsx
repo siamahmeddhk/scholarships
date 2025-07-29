@@ -1,9 +1,20 @@
 import React from 'react';
 import { useTopScholarships } from '../hook/useTopScholarships';
-import { Link } from 'react-router';
+import { useNavigate } from 'react-router';
+import { useAuthContext } from '../context/AuthContext'; // update path if needed
 
 const TopScholarships = () => {
   const { data: scholarships, isLoading, isError, error } = useTopScholarships();
+  const { user } = useAuthContext(); // ✅ check login
+  const navigate = useNavigate();
+
+  const handleDetailsClick = (id) => {
+    if (user) {
+      navigate(`/scholarship/${id}`);
+    } else {
+      navigate('/register');
+    }
+  };
 
   if (isLoading) return <div className="text-center py-10">Loading scholarships...</div>;
   if (isError) return <div className="text-center text-red-500 py-10">Error: {error.message}</div>;
@@ -42,17 +53,13 @@ const TopScholarships = () => {
               </p>
             </div>
 
-            {/* <button className="mt-5 w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-              View Details
-            </button> */}
-             
-              <Link to={`/scholarship/${scholarship._id}`}>
-              <button className="mt-3 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+            {/* ✅ Redirect based on login status */}
+            <button
+              onClick={() => handleDetailsClick(scholarship._id)}
+              className="mt-5 w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+            >
               Details
             </button>
-            </Link>
-
-
           </div>
         ))}
       </div>

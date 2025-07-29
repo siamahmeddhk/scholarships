@@ -37,7 +37,7 @@ const Addship = () => {
     }
 
     try {
-      await axios.post("http://localhost:5000/scholarships", formData);
+      await axios.post("https://s-server-two.vercel.app/scholarships", formData);
       Swal.fire("Success", "Scholarship added successfully!", "success");
 
       // Reset form

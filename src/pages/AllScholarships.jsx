@@ -1,14 +1,24 @@
 import React, { useState } from 'react';
 import { useScholarships } from '../hook/useScholarships';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
+import { useAuthContext } from '../context/AuthContext'; // update path as needed
 
 const AllScholarships = () => {
   const [search, setSearch] = useState('');
   const { data: scholarships, isLoading, isError, error } = useScholarships(search);
+  const { user } = useAuthContext(); // ✅ get logged-in user
+  const navigate = useNavigate();
 
   const handleSearch = (e) => {
     e.preventDefault();
-   
+  };
+
+  const handleDetailsClick = (id) => {
+    if (user) {
+      navigate(`/scholarship/${id}`);
+    } else {
+      navigate('/register');
+    }
   };
 
   return (
@@ -30,7 +40,6 @@ const AllScholarships = () => {
 
       {isLoading && <p>Loading scholarships...</p>}
       {isError && <p>Error: {error.message}</p>}
-
       {!isLoading && scholarships && scholarships.length === 0 && (
         <p>No scholarships found for "{search}"</p>
       )}
@@ -50,12 +59,14 @@ const AllScholarships = () => {
             </p>
             <p>Application Deadline: {new Date(scholarship.applicationDeadline).toLocaleDateString()}</p>
             <p>Application Fees: ${scholarship.applicationFees}</p>
-            <Link to={`/scholarship/${scholarship._id}`}>
-              <button className="mt-3 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+
+            {/* ✅ Button handles redirect based on user status */}
+            <button
+              onClick={() => handleDetailsClick(scholarship._id)}
+              className="mt-3 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
               Details
             </button>
-            </Link>
-          
           </div>
         ))}
       </div>

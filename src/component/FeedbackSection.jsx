@@ -30,7 +30,7 @@ const FeedbackSection = () => {
         createdAt: new Date(),
       };
 
-      const res = await axios.post("http://localhost:5000/site-feedback", newFeedback);
+      const res = await axios.post("https://s-server-two.vercel.app/site-feedback", newFeedback);
 
       if (res.status === 201) {
         Swal.fire({

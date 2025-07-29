@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Search, Filter, Trash2, Star, User, Calendar, GraduationCap, X, AlertTriangle } from "lucide-react";
+import {
+  Search,
+  Filter,
+  Trash2,
+  Star,
+  User,
+  Calendar,
+  GraduationCap,
+  AlertTriangle,
+} from "lucide-react";
+import { getAuth } from "firebase/auth";
 
 const AdminReview = () => {
   const [reviews, setReviews] = useState([]);
@@ -13,6 +23,8 @@ const AdminReview = () => {
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
 
+  const auth = getAuth();
+
   useEffect(() => {
     fetchReviews();
   }, []);
@@ -24,7 +36,7 @@ const AdminReview = () => {
   const fetchReviews = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:5000/reviews");
+      const response = await fetch("https://s-server-two.vercel.app/reviews");
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -32,7 +44,9 @@ const AdminReview = () => {
       setReviews(data);
       setError("");
     } catch (err) {
-      setError("Failed to fetch reviews. Please check your connection and try again.");
+      setError(
+        "Failed to fetch reviews. Please check your connection and try again."
+      );
       console.error("Error fetching reviews:", err);
     } finally {
       setLoading(false);
@@ -41,14 +55,15 @@ const AdminReview = () => {
 
   const filterAndSortReviews = () => {
     let filtered = reviews.filter((review) => {
-      const matchesSearch = 
+      const matchesSearch =
         review.scholarshipName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         review.universityName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         review.userEmail?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         review.comment?.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesRating = filterRating === "all" || review.rating === parseInt(filterRating);
-      
+
+      const matchesRating =
+        filterRating === "all" || review.rating === parseInt(filterRating);
+
       return matchesSearch && matchesRating;
     });
 
@@ -79,10 +94,21 @@ const AdminReview = () => {
     if (!deleteTarget) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/reviews/${deleteTarget._id}`, {
-        method: 'DELETE',
-      });
-      
+      const user = auth.currentUser;
+      if (!user) throw new Error("User not authenticated");
+
+      const token = await user.getIdToken();
+
+      const response = await fetch(
+        `https://s-server-two.vercel.app/reviews/${deleteTarget._id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -106,19 +132,31 @@ const AdminReview = () => {
     if (filteredReviews.length === 0) return;
 
     try {
-      const deletePromises = filteredReviews.map(review => 
-        fetch(`http://localhost:5000/reviews/${review._id}`, { method: 'DELETE' })
+      const user = auth.currentUser;
+      if (!user) throw new Error("User not authenticated");
+
+      const token = await user.getIdToken();
+
+      const deletePromises = filteredReviews.map((review) =>
+        fetch(`https://s-server-two.vercel.app/reviews/${review._id}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
       );
-      
+
       const results = await Promise.allSettled(deletePromises);
-      const failedDeletes = results.filter(result => result.status === 'rejected');
-      
+      const failedDeletes = results.filter(
+        (result) => result.status === "rejected"
+      );
+
       if (failedDeletes.length > 0) {
         throw new Error(`${failedDeletes.length} deletions failed`);
       }
-      
-      const deletedIds = filteredReviews.map(r => r._id);
-      setReviews(prev => prev.filter(r => !deletedIds.includes(r._id)));
+
+      const deletedIds = filteredReviews.map((r) => r._id);
+      setReviews((prev) => prev.filter((r) => !deletedIds.includes(r._id)));
       setShowBulkDeleteModal(false);
       showSuccessMessage(`${filteredReviews.length} review(s) deleted successfully!`);
     } catch (err) {
@@ -128,9 +166,9 @@ const AdminReview = () => {
   };
 
   const showSuccessMessage = (message) => {
-    // Simple success notification - in a real app you'd use a toast library
-    const notification = document.createElement('div');
-    notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+    const notification = document.createElement("div");
+    notification.className =
+      "fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50";
     notification.textContent = message;
     document.body.appendChild(notification);
     setTimeout(() => {
@@ -139,8 +177,9 @@ const AdminReview = () => {
   };
 
   const showErrorMessage = (message) => {
-    const notification = document.createElement('div');
-    notification.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+    const notification = document.createElement("div");
+    notification.className =
+      "fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50";
     notification.textContent = message;
     document.body.appendChild(notification);
     setTimeout(() => {
@@ -331,10 +370,9 @@ const AdminReview = () => {
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
           <p className="text-sm text-yellow-600 font-medium">Average Rating</p>
           <p className="text-2xl font-bold text-yellow-700">
-            {reviews.length > 0 
+            {reviews.length > 0
               ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
-              : "0.0"
-            }
+              : "0.0"}
           </p>
         </div>
       </div>
@@ -347,10 +385,9 @@ const AdminReview = () => {
           </div>
           <p className="text-lg text-gray-600 mb-2">No reviews found</p>
           <p className="text-gray-500">
-            {searchTerm || filterRating !== "all" 
-              ? "Try adjusting your search or filter criteria" 
-              : "No reviews have been submitted yet"
-            }
+            {searchTerm || filterRating !== "all"
+              ? "Try adjusting your search or filter criteria"
+              : "No reviews have been submitted yet"}
           </p>
         </div>
       ) : (
@@ -396,9 +433,7 @@ const AdminReview = () => {
               </div>
 
               {/* Rating */}
-              <div className="mb-4">
-                {renderStars(review.rating)}
-              </div>
+              <div className="mb-4">{renderStars(review.rating)}</div>
 
               {/* Comment */}
               <div className="mb-6">

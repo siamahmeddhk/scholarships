@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { getAuth } from "firebase/auth";
 
 const AdminManageShip = () => {
   const [scholarships, setScholarships] = useState([]);
@@ -13,13 +14,17 @@ const AdminManageShip = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterDegree, setFilterDegree] = useState("All");
 
+  const auth = getAuth();
+
   useEffect(() => {
     fetchScholarships();
   }, []);
 
   const fetchScholarships = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/scholarships");
+      setLoading(true);
+      setError("");
+      const res = await axios.get("https://s-server-two.vercel.app/scholarships");
       setScholarships(res.data);
     } catch (err) {
       setError("Failed to fetch scholarships. Please try again later.");
@@ -30,6 +35,13 @@ const AdminManageShip = () => {
   };
 
   const handleDelete = async (id) => {
+    const user = auth.currentUser;
+    if (!user) {
+      Swal.fire("Unauthorized", "Please log in to delete scholarships.", "warning");
+      return;
+    }
+    const token = await user.getIdToken();
+
     const confirm = await Swal.fire({
       title: "Are you sure?",
       text: "This scholarship will be deleted permanently.",
@@ -42,7 +54,11 @@ const AdminManageShip = () => {
 
     if (confirm.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:5000/scholarships/${id}`);
+        await axios.delete(`https://s-server-two.vercel.app/scholarships/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setScholarships((prev) => prev.filter((s) => s._id !== id));
         Swal.fire("Deleted!", "Scholarship deleted successfully.", "success");
       } catch (err) {
@@ -54,18 +70,41 @@ const AdminManageShip = () => {
 
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const { _id, scholarshipName, universityName, degree, applicationFees, scholarshipCategory, description } =
-        updateScholarship;
 
-      await axios.patch(`http://localhost:5000/scholarships/${_id}`, {
+    const user = auth.currentUser;
+    if (!user) {
+      Swal.fire("Unauthorized", "Please log in to update scholarships.", "warning");
+      return;
+    }
+    const token = await user.getIdToken();
+
+    try {
+      const {
+        _id,
         scholarshipName,
         universityName,
         degree,
-        applicationFees: Number(applicationFees),
+        applicationFees,
         scholarshipCategory,
         description,
-      });
+      } = updateScholarship;
+
+      await axios.patch(
+        `https://s-server-two.vercel.app/scholarships/${_id}`,
+        {
+          scholarshipName,
+          universityName,
+          degree,
+          applicationFees: Number(applicationFees),
+          scholarshipCategory,
+          description,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       Swal.fire("Success!", "Scholarship updated successfully.", "success");
       setUpdateScholarship(null);
@@ -106,18 +145,14 @@ const AdminManageShip = () => {
   if (error) {
     return (
       <div className="flex justify-center items-center h-screen bg-red-50">
-        <p className="text-red-600 text-xl font-semibold p-4 border border-red-300 rounded-lg">
-          {error}
-        </p>
+        <p className="text-red-600 text-xl font-semibold p-4 border border-red-300 rounded-lg">{error}</p>
       </div>
     );
   }
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
-      <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center text-indigo-700">
-        Manage Scholarships
-      </h2>
+      <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center text-indigo-700">Manage Scholarships</h2>
 
       {/* Search & Filter */}
       <div className="flex flex-col md:flex-row gap-4 mb-6">
@@ -143,9 +178,7 @@ const AdminManageShip = () => {
 
       {/* Table */}
       {filteredScholarships.length === 0 ? (
-        <div className="text-center text-gray-600 p-6 bg-white rounded-lg shadow">
-          No scholarships found.
-        </div>
+        <div className="text-center text-gray-600 p-6 bg-white rounded-lg shadow">No scholarships found.</div>
       ) : (
         <div className="overflow-x-auto bg-white rounded-lg shadow">
           <table className="min-w-full">
@@ -207,15 +240,17 @@ const AdminManageShip = () => {
             >
               &times;
             </button>
-            <h3 className="text-xl font-bold text-indigo-700 mb-4">
-              {selectedScholarship.scholarshipName}
-            </h3>
-            <p><strong>University:</strong> {selectedScholarship.universityName}</p>
-            <p><strong>Degree:</strong> {selectedScholarship.degree}</p>
-            <p><strong>Fee:</strong> ${selectedScholarship.applicationFees}</p>
-            <p className="mt-2 text-gray-700">
-              {selectedScholarship.description || "No description."}
+            <h3 className="text-xl font-bold text-indigo-700 mb-4">{selectedScholarship.scholarshipName}</h3>
+            <p>
+              <strong>University:</strong> {selectedScholarship.universityName}
             </p>
+            <p>
+              <strong>Degree:</strong> {selectedScholarship.degree}
+            </p>
+            <p>
+              <strong>Fee:</strong> ${selectedScholarship.applicationFees}
+            </p>
+            <p className="mt-2 text-gray-700">{selectedScholarship.description || "No description."}</p>
           </div>
         </div>
       )}
@@ -274,9 +309,7 @@ const AdminManageShip = () => {
               placeholder="Description"
             />
 
-            <button className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700">
-              Save
-            </button>
+            <button className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700">Save</button>
           </form>
         </div>
       )}

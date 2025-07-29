@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { getAuth } from "firebase/auth";
 
 const ModaretorShip = () => {
   const [scholarships, setScholarships] = useState([]);
@@ -13,14 +14,18 @@ const ModaretorShip = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterDegree, setFilterDegree] = useState("All");
 
+  const auth = getAuth();
+
   useEffect(() => {
     fetchScholarships();
   }, []);
 
   const fetchScholarships = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/scholarships");
+      setLoading(true);
+      const res = await axios.get("https://s-server-two.vercel.app/scholarships");
       setScholarships(res.data);
+      setError("");
     } catch (err) {
       setError("Failed to fetch scholarships. Please try again later.");
       console.error(err);
@@ -30,6 +35,14 @@ const ModaretorShip = () => {
   };
 
   const handleDelete = async (id) => {
+    const user = auth.currentUser;
+    if (!user) {
+      Swal.fire("Error!", "You must be logged in to delete scholarships.", "error");
+      return;
+    }
+
+    const token = await user.getIdToken();
+
     const confirm = await Swal.fire({
       title: "Are you sure?",
       text: "This scholarship will be deleted permanently.",
@@ -42,7 +55,11 @@ const ModaretorShip = () => {
 
     if (confirm.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:5000/scholarships/${id}`);
+        await axios.delete(`https://s-server-two.vercel.app/scholarships/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setScholarships((prev) => prev.filter((s) => s._id !== id));
         Swal.fire("Deleted!", "Scholarship deleted successfully.", "success");
       } catch (err) {
@@ -58,14 +75,29 @@ const ModaretorShip = () => {
       const { _id, scholarshipName, universityName, degree, applicationFees, scholarshipCategory, description } =
         updateScholarship;
 
-      await axios.patch(`http://localhost:5000/scholarships/${_id}`, {
-        scholarshipName,
-        universityName,
-        degree,
-        applicationFees: Number(applicationFees),
-        scholarshipCategory,
-        description,
-      });
+      const user = auth.currentUser;
+      if (!user) {
+        Swal.fire("Error!", "You must be logged in to update scholarships.", "error");
+        return;
+      }
+      const token = await user.getIdToken();
+
+      await axios.patch(
+        `https://s-server-two.vercel.app/scholarships/${_id}`,
+        {
+          scholarshipName,
+          universityName,
+          degree,
+          applicationFees: Number(applicationFees),
+          scholarshipCategory,
+          description,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       Swal.fire("Success!", "Scholarship updated successfully.", "success");
       setUpdateScholarship(null);

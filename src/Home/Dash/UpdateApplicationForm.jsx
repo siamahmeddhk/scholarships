@@ -30,7 +30,7 @@ const UpdateApplicationForm = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/applications/${applicationId}`)
+      .get(`https://s-server-two.vercel.app/applications/${applicationId}`)
       .then((res) => {
         setFormData(res.data);
         setLoading(false);
@@ -54,7 +54,7 @@ const UpdateApplicationForm = () => {
     e.preventDefault();
 
     axios
-      .patch(`http://localhost:5000/applications/${applicationId}`, formData)
+      .patch(`https://s-server-two.vercel.app/applications/${applicationId}`, formData)
       .then(() => {
         Swal.fire("Updated!", "Application updated successfully", "success");
         navigate("/dashboard/my-applications"); // update this path as needed

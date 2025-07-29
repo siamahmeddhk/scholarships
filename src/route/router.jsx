@@ -32,6 +32,9 @@ import AdminReview from "../Home/Admin/AdminReview";
 import ErrorPage from "../component/Error";
 import ModeratorReview from "../Home/Modarators/ModeratorReviews";
 import ModaretorShip from "../Home/Modarators/ModaretorShip";
+import Modpro from "../Home/Modarators/Modpro";
+import Admin from "../Home/Admin/Admin";
+import Adminpro from "../Home/Admin/Adminpro";
 
 
 export const router = createBrowserRouter([
@@ -85,6 +88,14 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: "moderator-profile",
+        element: (
+          <ModeratorRoute>
+            <Modpro />
+          </ModeratorRoute>
+        ),
+      },
+      {
         path: "moderator-edit-scholarship",
         element: (
           <ModeratorRoute>
@@ -103,6 +114,20 @@ export const router = createBrowserRouter([
         path: "admin-add-ship",
         element: ( <AdminRoute>
           <Addship></Addship>
+        </AdminRoute>
+        )
+      },
+      {
+        path: "admin-home",
+        element: ( <AdminRoute>
+          <Admin></Admin>
+        </AdminRoute>
+        )
+      },
+      {
+        path: "admin-file",
+        element: ( <AdminRoute>
+          <Adminpro></Adminpro>
         </AdminRoute>
         )
       },

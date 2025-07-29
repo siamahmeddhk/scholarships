@@ -13,7 +13,7 @@
 //   const { data: scholarship, isLoading, isError } = useQuery({
 //     queryKey: ['scholarship', id],
 //     queryFn: async () => {
-//       const res = await axios.get(`http://localhost:5000/scholarships/${id}`);
+//       const res = await axios.get(`https://s-server-two.vercel.app/scholarships/${id}`);
 //       return res.data;
 //     }
 //   });

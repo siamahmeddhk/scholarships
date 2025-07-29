@@ -5,7 +5,7 @@ import axios from 'axios';
 import { FcGoogle } from 'react-icons/fc';
 
 const Register = () => {
-  const { createUser,  updateProfile, signInWithGoogle } = useAuthContext();
+  const { createUser, signInWithGoogle } = useAuthContext();
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -26,6 +26,19 @@ const Register = () => {
     return null;
   };
 
+  const saveUserToBackend = async (user) => {
+    // Prepare user data for backend
+    const userData = {
+      uid: user.uid,
+      email: user.email,
+      name: user.displayName || form.name || 'New User',
+      photoURL: user.photoURL || form.photoURL || 'https://via.placeholder.com/150',
+      role: 'user',
+      createdAt: new Date().toISOString(),
+    };
+    await axios.post('https://s-server-two.vercel.app/users', userData);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -34,19 +47,12 @@ const Register = () => {
     if (passwordError) return setError(passwordError);
 
     try {
-      const result = await createUser(form.email, form.password);
-      await  updateProfile(form.name, form.photoURL);
+      // Pass name and photoURL as arguments to createUser
+      const user = await createUser(form.email, form.password, form.name, form.photoURL);
 
-      const newUser = {
-        name: form.name,
-        email: form.email,
-        photoURL: form.photoURL,
-        uid: result.user.uid,
-        role: 'user',
-        createdAt: new Date(),
-      };
+      // Save user to backend
+      await saveUserToBackend(user);
 
-      await axios.post('http://localhost:5000/users', newUser);
       navigate('/');
     } catch (err) {
       console.error('Registration Error:', err);
@@ -56,23 +62,15 @@ const Register = () => {
 
   const handleGoogleSignIn = async () => {
     try {
-      const result = await signInWithGoogle();
-      const { displayName, email, photoURL, uid } = result.user;
+      const user = await signInWithGoogle();
 
-      const userDoc = {
-        name: displayName,
-        email,
-        photoURL,
-        uid,
-        role: 'user',
-        createdAt: new Date(),
-      };
+      // Save Google user to backend
+      await saveUserToBackend(user);
 
-      await axios.post('http://localhost:5000/users', userDoc);
       navigate('/');
     } catch (err) {
       console.error('Google Sign-In Error:', err);
-      setError(err.message);
+      setError(err.message || 'Google Sign-In failed');
     }
   };
 

@@ -15,7 +15,7 @@ const ManageUsers = () => {
   } = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
-      const res = await axios.get("http://localhost:5000/users"); // Your backend API endpoint
+      const res = await axios.get("https://s-server-two.vercel.app/users");
       return res.data;
     },
   });
@@ -23,7 +23,7 @@ const ManageUsers = () => {
   // Change user role handler
   const handleRoleChange = async (id, newRole) => {
     try {
-      await axios.patch(`http://localhost:5000/users/${id}`, { role: newRole });
+      await axios.patch(`https://s-server-two.vercel.app/users/${id}`, { role: newRole });
       Swal.fire("Updated!", "User role updated.", "success");
       refetch();
     } catch (err) {
@@ -42,7 +42,7 @@ const ManageUsers = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`http://localhost:5000/users/${id}`);
+          await axios.delete(`https://s-server-two.vercel.app/users/${id}`);
           Swal.fire("Deleted!", "User has been removed.", "success");
           refetch();
         } catch (err) {

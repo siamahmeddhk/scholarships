@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 const fetchTopScholarships = async () => {
-  const { data } = await axios.get('http://localhost:5000/all-scholarships');
+  const { data } = await axios.get('https://s-server-two.vercel.app/all-scholarships');
   return data;
 };
 

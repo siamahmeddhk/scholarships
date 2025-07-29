@@ -1,15 +1,33 @@
-// hooks/useRole.js
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
 
-const useRole = (email) => {
+const useRole = (email, userData) => {
+  const queryClient = useQueryClient();
+
   const { data: user = {}, isLoading } = useQuery({
-    queryKey: ['role', email],
+    queryKey: ["role", email],
     queryFn: async () => {
-      const res = await axios.get(`http://localhost:5000/users/${email}`);
-      return res.data;
+      try {
+        const res = await axios.get(`https://s-server-two.vercel.app/users/${email}`);
+        return res.data;
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          // User not found, create user in backend with default role
+          await axios.post(`https://s-server-two.vercel.app/users`, {
+            email,
+            name: userData?.displayName || "New User",
+            role: "user",
+            photoURL: userData?.photoURL || "",
+          });
+          // After adding user, refetch data
+          return queryClient.fetchQuery(["role", email], () =>
+            axios.get(`https://s-server-two.vercel.app/users/${email}`).then((res) => res.data)
+          );
+        }
+        throw error;
+      }
     },
-    enabled: !!email
+    enabled: !!email,
   });
 
   return { role: user.role, isLoading };
