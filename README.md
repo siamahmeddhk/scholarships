@@ -1,12 +1,38 @@
-# React + Vite
+# 🎓 Scholarship Management System - Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the client side of the **Scholarship Management System** built with React, Tailwind CSS, DaisyUI, Firebase Authentication, and TanStack Query. The platform allows students to browse, search, and apply for various scholarships and provides separate dashboards for users, moderators, and admins.
 
-Currently, two official plugins are available:
+## 🚀 Live URL
+[👉 Live Site](https://scholar-nest.netlify.app/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🧠 Purpose
+To help students find and apply for scholarships at different universities through a streamlined and secure platform with role-based access control.
 
-## Expanding the ESLint configuration
+## ✨ Key Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- 🔐 Firebase Authentication (Email/Password + Google Sign-In)
+- 🧾 Scholarship Search, Details View, and Application
+- 💳 Stripe Payment Integration
+- 📦 User, Moderator & Admin Dashboards
+- 📝 Review Submission and Management
+- 🌐 Role-based Route Protection (User, Moderator, Admin)
+- 📈 Chart Analytics for Admin
+- 🔎 Filter, Sort, and Search Functionality
+- 🪄 Responsive Design for all devices
+- 📦 TanStack Query for all `GET` data fetching
+- 🌗 Dark/Light Theme Toggle with DaisyUI
+- ✅ 404 Page and Friendly Routing
+
+## 🛠️ Tech Stack
+
+- React.js
+- React Router
+- Tailwind CSS + DaisyUI
+- Firebase Authentication
+- Stripe (for payment)
+- TanStack Query
+- Swiper.js (for sliders)
+- React Hook Form (for forms)
+- SweetAlert2 & Toastify
+
+

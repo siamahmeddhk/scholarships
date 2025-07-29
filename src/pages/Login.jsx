@@ -1,42 +1,85 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useAuthContext } from '../context/AuthContext';
+import Swal from 'sweetalert2';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 const Login = () => {
   const { signIn, signInWithGoogle } = useAuthContext();
   const [form, setForm] = useState({ email: '', password: '' });
-  const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const getFriendlyError = (code) => {
+    switch (code) {
+      case 'auth/user-not-found':
+        return 'No user found with this email.';
+      case 'auth/wrong-password':
+        return 'Incorrect password. Please try again.';
+      case 'auth/invalid-email':
+        return 'The email address is not valid.';
+      case 'auth/too-many-requests':
+        return 'Too many failed attempts. Please try again later.';
+      default:
+        return 'Login failed. Please check your credentials and try again.';
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
 
     try {
       await signIn(form.email, form.password);
-      navigate('/'); // Redirect on successful login
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'You have successfully logged in.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
+      navigate('/');
     } catch (err) {
-      setError(err.message);
+      const errorCode = err.code || '';
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Failed',
+        text: getFriendlyError(errorCode),
+      });
     }
   };
 
   const handleGoogleSignIn = async () => {
-    setError('');
     try {
       await signInWithGoogle();
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Welcome!',
+        text: 'You have logged in with Google.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
       navigate('/');
     } catch (err) {
-      setError(err.message);
+      Swal.fire({
+        icon: 'error',
+        title: 'Google Sign-In Failed',
+        text: 'Something went wrong with Google Sign-In. Please try again.',
+      });
     }
   };
 
   return (
-    <div className="max-w-xl mx-auto mt-12 bg-white p-8 rounded shadow">
+    <div className="max-w-md mx-auto mt-16 bg-white p-8 rounded-2xl shadow-lg border">
       <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">Login to Your Account</h2>
+
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
           <label className="block mb-1 font-medium">Email</label>
@@ -46,29 +89,35 @@ const Login = () => {
             value={form.email}
             onChange={handleChange}
             required
-            className="w-full border px-4 py-2 rounded"
+            className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring focus:ring-blue-200"
             placeholder="example@mail.com"
           />
         </div>
 
         <div>
           <label className="block mb-1 font-medium">Password</label>
-          <input
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            required
-            className="w-full border px-4 py-2 rounded"
-            placeholder="Enter your password"
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring focus:ring-blue-200"
+              placeholder="Enter your password"
+            />
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-2.5 text-gray-600 cursor-pointer"
+            >
+              {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+            </span>
+          </div>
         </div>
-
-        {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+          className="w-full bg-blue-600 text-white font-semibold py-2 rounded hover:bg-blue-700 transition"
         >
           Login
         </button>
@@ -79,7 +128,6 @@ const Login = () => {
           onClick={handleGoogleSignIn}
           className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
         >
-          {/* Google logo SVG (optional) */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5 mr-2"
@@ -97,7 +145,7 @@ const Login = () => {
 
       <p className="text-center text-sm mt-6">
         Don't have an account?{' '}
-        <a href="/register" className="text-blue-600 underline">
+        <a href="/register" className="text-blue-600 font-medium hover:underline">
           Register here
         </a>
       </p>

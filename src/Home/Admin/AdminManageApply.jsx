@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { getAuth } from "firebase/auth"; // Make sure Firebase is initialized
+import { getAuth } from "firebase/auth";
 
 const AdminManageApply = () => {
   const [applications, setApplications] = useState([]);
@@ -9,6 +9,10 @@ const AdminManageApply = () => {
   const [selectedApp, setSelectedApp] = useState(null);
   const [feedbackApp, setFeedbackApp] = useState(null);
   const [feedbackText, setFeedbackText] = useState("");
+
+  // Sorting/filtering state
+  const [sortByAppliedDate, setSortByAppliedDate] = useState(""); // 'asc' | 'desc' | ''
+  const [sortByDeadline, setSortByDeadline] = useState(""); // 'asc' | 'desc' | ''
 
   const fetchApplications = async () => {
     try {
@@ -91,6 +95,28 @@ const AdminManageApply = () => {
     }
   };
 
+  // Sorting logic:
+  const sortedApplications = [...applications].sort((a, b) => {
+    if (!sortByAppliedDate && !sortByDeadline) return 0;
+
+    if (sortByAppliedDate) {
+      const dateA = new Date(a.appliedDate || a.createdAt || 0);
+      const dateB = new Date(b.appliedDate || b.createdAt || 0);
+      if (dateA < dateB) return sortByAppliedDate === "asc" ? -1 : 1;
+      if (dateA > dateB) return sortByAppliedDate === "asc" ? 1 : -1;
+      if (!sortByDeadline) return 0;
+    }
+
+    if (sortByDeadline) {
+      const deadlineA = new Date(a.scholarshipDetails?.applicationDeadline || 0);
+      const deadlineB = new Date(b.scholarshipDetails?.applicationDeadline || 0);
+      if (deadlineA < deadlineB) return sortByDeadline === "asc" ? -1 : 1;
+      if (deadlineA > deadlineB) return sortByDeadline === "asc" ? 1 : -1;
+    }
+
+    return 0;
+  });
+
   if (loading)
     return (
       <div className="flex justify-center items-center h-screen">
@@ -106,7 +132,42 @@ const AdminManageApply = () => {
         📄 All Applied Scholarships
       </h2>
 
-      {applications.length === 0 ? (
+      {/* Sorting/Filtering Controls */}
+      <div className="flex justify-center gap-6 mb-6 flex-wrap">
+        <div>
+          <label htmlFor="sortAppliedDate" className="mr-2 font-semibold">
+            Sort by Applied Date:
+          </label>
+          <select
+            id="sortAppliedDate"
+            value={sortByAppliedDate}
+            onChange={(e) => setSortByAppliedDate(e.target.value)}
+            className="border rounded px-3 py-1"
+          >
+            <option value="">None</option>
+            <option value="asc">Oldest First</option>
+            <option value="desc">Newest First</option>
+          </select>
+        </div>
+
+        <div>
+          <label htmlFor="sortDeadline" className="mr-2 font-semibold">
+            Sort by Scholarship Deadline:
+          </label>
+          <select
+            id="sortDeadline"
+            value={sortByDeadline}
+            onChange={(e) => setSortByDeadline(e.target.value)}
+            className="border rounded px-3 py-1"
+          >
+            <option value="">None</option>
+            <option value="asc">Earliest Deadline First</option>
+            <option value="desc">Latest Deadline First</option>
+          </select>
+        </div>
+      </div>
+
+      {sortedApplications.length === 0 ? (
         <p className="text-center text-gray-500">No applications found.</p>
       ) : (
         <div className="overflow-x-auto shadow-lg rounded-lg border border-gray-200">
@@ -121,7 +182,7 @@ const AdminManageApply = () => {
               </tr>
             </thead>
             <tbody>
-              {applications.map((app, index) => (
+              {sortedApplications.map((app, index) => (
                 <tr
                   key={app._id}
                   className={`${
