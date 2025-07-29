@@ -1,10 +1,14 @@
-import { Outlet } from "react-router";
+import { Outlet, useLocation } from "react-router";
 import { useState } from "react";
-import { Menu, X } from "lucide-react"; // Added X icon for close button
+import { Menu, X } from "lucide-react";
 import Sidebar from "./sidebar";
 
 const DashboardLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const location = useLocation();
+
+  // Check if the current path is exactly "/dashboard" (adjust according to your route)
+  const isDashboardRoot = location.pathname === "/dashboard";
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row bg-gray-50">
@@ -53,7 +57,17 @@ const DashboardLayout = () => {
 
       {/* Main Content */}
       <main className="flex-1 p-6 lg:p-8 min-h-screen overflow-auto">
-        <Outlet />
+        {isDashboardRoot ? (
+          <div className="flex flex-col items-center justify-center h-full text-center text-gray-600">
+            <h1 className="text-4xl font-bold mb-4">Welcome to Your Dashboard</h1>
+            <p className="text-lg max-w-xl">
+              Select an option from the sidebar to get started.
+            </p>
+            {/* You can add more UI here, like an illustration or quick links */}
+          </div>
+        ) : (
+          <Outlet />
+        )}
       </main>
     </div>
   );
