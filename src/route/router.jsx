@@ -35,6 +35,7 @@ import ModaretorShip from "../Home/Modarators/ModaretorShip";
 import Modpro from "../Home/Modarators/Modpro";
 import Admin from "../Home/Admin/Admin";
 import Adminpro from "../Home/Admin/Adminpro";
+import HowItWorks from "../component/HowItWorks";
 
 
 export const router = createBrowserRouter([
@@ -46,6 +47,7 @@ export const router = createBrowserRouter([
       { path: "/", element: <Home /> },
       { path: "/all-scholarships", element: <AllScholarships /> },
       { path: "/scholarship/:id", element: <ScholarshipDetails /> },
+      { path: "/work", element: <HowItWorks/>},
       { path: "/register", element: <Register /> },
       { path: "/login", element: <Login /> },
       { path: "/apply/:id", element: <ApplyScholarship /> },
