@@ -27,6 +27,9 @@ import Banner from './Banner';
 import TopScholarships from '../pages/TopScholarships';
 import FeedbackSection from '../component/FeedbackSection';
 import ScholarshipStats from '../component/ScholarshipStats'; // ✅ Import the new component
+import ModeratorsShowcase from './ModeratorsShowcase';
+import Feedback from './Feedback';
+import PartnersUniversities from './PartnersUniversities';
 
 const Home = () => {
     const statsData = {
@@ -40,6 +43,9 @@ const Home = () => {
             <Banner />
             <TopScholarships />
             <ScholarshipStats stats={statsData} />  {/* ✅ Added here */}
+            <PartnersUniversities></PartnersUniversities>
+            <ModeratorsShowcase></ModeratorsShowcase>
+            <Feedback></Feedback>
             <FeedbackSection />
         </div>
     );

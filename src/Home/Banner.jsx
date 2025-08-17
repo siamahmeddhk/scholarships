@@ -35,7 +35,7 @@ const Banner = () => {
   ];
 
   return (
-    <div className="relative mt-4 mx-4 sm:mx-6 lg:mx-8 rounded-2xl overflow-hidden shadow-2xl">
+    <div className="relative overflow-hidden ">
       <Swiper
         modules={[Pagination, Autoplay, EffectFade, Parallax]}
         effect="fade"
@@ -48,12 +48,12 @@ const Banner = () => {
           bulletActiveClass: "!bg-white !scale-125 !shadow-lg",
         }}
         autoplay={{
-          delay: 5000,
+          delay: 3000,
           disableOnInteraction: false,
           pauseOnMouseEnter: true,
         }}
         loop={true}
-        className="w-full h-[450px] md:h-[600px] rounded-2xl"
+        className="w-full h-[450px] md:h-[600px]"
       >
         <div
           slot="container-start"
@@ -65,7 +65,7 @@ const Banner = () => {
           <SwiperSlide key={slide.id}>
             {/* Background Image */}
             <div
-              className="absolute inset-0 w-full h-full bg-cover bg-center scale-105 transform hover:scale-110 transition-transform duration-700"
+              className="absolute inset-0 w-full h-full bg-cover bg-center scale-105 transform hover:scale-110 transition-transform duration-300"
               style={{ backgroundImage: `url(${slide.image})` }}
               data-swiper-parallax="-20%"
             ></div>

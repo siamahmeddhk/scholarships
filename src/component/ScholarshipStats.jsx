@@ -16,7 +16,7 @@ const ScholarshipStats = ({ stats }) => {
   }, [stats]);
 
   return (
-    <div className="bg-gradient-to-r from-indigo-900 via-indigo-700 to-purple-800 text-white py-12 px-6 rounded-xl shadow-2xl my-12 max-w-6xl mx-auto">
+    <div className="bg-gradient-to-r from-indigo-900 via-indigo-700 to-purple-800 text-white py-12 px-6 rounded-xl shadow-2xl my-12 max-w-6xl lg:max-w-7xl mx-auto">
       <h2 className="text-3xl font-bold text-center mb-10">🎓 Scholarship Statistics</h2>
 
       {/* Animated Counters */}

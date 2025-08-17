@@ -1,8 +1,12 @@
+
+
+
 import { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useAuthContext } from "../context/AuthContext";
 import { motion } from "framer-motion";
+import { Star } from "lucide-react";
 
 const FeedbackSection = () => {
   const { user } = useAuthContext();
@@ -30,7 +34,10 @@ const FeedbackSection = () => {
         createdAt: new Date(),
       };
 
-      const res = await axios.post("https://s-server-two.vercel.app/site-feedback", newFeedback);
+      const res = await axios.post(
+        "https://s-server-two.vercel.app/site-feedback",
+        newFeedback
+      );
 
       if (res.status === 201) {
         Swal.fire({
@@ -56,44 +63,61 @@ const FeedbackSection = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="max-w-lg mx-auto bg-gradient-to-b from-indigo-900 to-indigo-700 p-6 rounded-2xl shadow-2xl mt-10 text-white"
+      className="max-w-xl mx-auto mt-16 bg-white rounded-2xl shadow-lg border border-gray-100 p-8"
     >
-      <h2 className="text-3xl font-bold mb-4 text-center">We value your feedback!</h2>
-      <p className="text-center text-gray-200 mb-6">
-        Tell us how we can make <span className="font-semibold">ScholarNest</span> even better.
-      </p>
+      {/* Header */}
+      <div className="text-center mb-6">
+        <h2 className="text-3xl font-bold text-indigo-700">
+          ✨ We Value Your Feedback!
+        </h2>
+        <p className="text-gray-600 mt-2">
+          Help us make <span className="font-semibold text-indigo-600">ScholarNest</span> even better for students worldwide 🌍
+        </p>
+      </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Textarea */}
         <textarea
-          className="w-full border border-indigo-300 bg-white text-black p-3 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:outline-none resize-none"
+          className="w-full border border-gray-300 bg-gray-50 text-gray-800 p-4 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:outline-none resize-none"
           rows="4"
-          placeholder="Write your feedback here..."
+          placeholder="Share your thoughts..."
           value={feedback}
           onChange={(e) => setFeedback(e.target.value)}
         />
 
+        {/* Rating */}
         <div>
-          <label className="block mb-2 font-medium">Rate our site:</label>
-          <div className="flex gap-2">
+          <label className="block mb-2 font-medium text-gray-700">
+            Rate our site:
+          </label>
+          <div className="flex gap-3 justify-center">
             {[1, 2, 3, 4, 5].map((num) => (
               <button
                 key={num}
                 type="button"
-                className={`px-3 py-2 rounded-full text-lg font-bold ${
-                  rating === num ? "bg-yellow-400 text-black" : "bg-gray-300 text-black"
-                } hover:scale-105 transition`}
+                className={`w-12 h-12 flex items-center justify-center rounded-full shadow-md transition-all ${
+                  rating === num
+                    ? "bg-yellow-400 text-black scale-110"
+                    : "bg-gray-200 text-gray-600 hover:bg-yellow-200"
+                }`}
                 onClick={() => setRating(num)}
               >
-                ⭐{num}
+                <Star
+                  className={`w-5 h-5 ${
+                    rating >= num ? "fill-yellow-500 text-yellow-500" : ""
+                  }`}
+                />
               </button>
             ))}
           </div>
         </div>
 
+        {/* Submit Button */}
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-yellow-400 text-black font-semibold py-2 rounded-lg shadow-md hover:bg-yellow-300 hover:scale-105 transition-transform"
+          className="w-full py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-indigo-600 to-purple-600 shadow-md hover:shadow-xl transition-transform hover:scale-105"
         >
           {loading ? "Submitting..." : "Submit Feedback"}
         </button>
