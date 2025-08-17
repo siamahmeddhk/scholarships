@@ -199,7 +199,7 @@ const UniversitiesShowcase = () => {
   return (
     <section className="py-16 bg-white border-t border-b border-gray-100">
       <div className="container mx-auto px-4">
-        <h2 className="text-2xl font-medium text-center text-gray-800 mb-2 tracking-wider">
+        <h2 className="text-3xl  font-bold text-center text-gray-800 mb-2 tracking-wider">
           OUR GLOBAL PARTNERS
         </h2>
         <p className="text-sm text-center text-gray-500 mb-8 tracking-widest">

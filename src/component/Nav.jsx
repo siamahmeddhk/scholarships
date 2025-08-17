@@ -216,6 +216,22 @@ const Nav = () => {
           >
             All Scholarships
           </Link>
+          <Link
+            to="/work"
+            className="block py-3 font-semibold hover:text-indigo-600 hover:bg-indigo-50 rounded px-4"
+            onClick={() => setMenuOpen(false)}
+          >
+            How we work
+          </Link>
+          {user && (
+            <Link
+              to="/help"
+              className="block py-3 font-semibold hover:text-indigo-600 hover:bg-indigo-50 rounded px-4"
+              onClick={() => setMenuOpen(false)}
+            >
+              Helpdesk
+            </Link>
+          )}
           {user && (
             <Link
               to="/dashboard"

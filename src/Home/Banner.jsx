@@ -5,12 +5,14 @@ import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 import { Pagination, Autoplay, EffectFade, Parallax } from "swiper/modules";
 import { ArrowRight } from "lucide-react";
-
+// https://i.ibb.co.com/Zz5bcsSR/b121.png
+// https://i.ibb.co.com/9HkYt7Bz/b122.png
+// https://i.ibb.co.com/3yNMGcP6/b123.png
 const Banner = () => {
   const slides = [
     {
       id: 1,
-      image: "/b121.png",
+      image: "/ban2.jpeg",
       title: "Discover Global Scholarships",
       subtitle: "Find the best funding opportunities around the world",
       cta: "Explore Opportunities",
@@ -18,7 +20,7 @@ const Banner = () => {
     },
     {
       id: 2,
-      image: "/b122.png",
+      image: "/ban1.jpeg",
       title: "Apply with Confidence",
       subtitle: "Smooth application process with expert guidance",
       cta: "Learn How to Apply",
@@ -26,7 +28,7 @@ const Banner = () => {
     },
     {
       id: 3,
-      image: "/b123.png",
+      image: "/ban3.jpeg",
       title: "Build Your Future",
       subtitle: "Turn your academic dreams into reality",
       cta: "Start Your Journey",
