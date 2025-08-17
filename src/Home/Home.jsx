@@ -30,6 +30,8 @@ import ScholarshipStats from '../component/ScholarshipStats'; // ✅ Import the 
 import ModeratorsShowcase from './ModeratorsShowcase';
 import Feedback from './Feedback';
 import PartnersUniversities from './PartnersUniversities';
+import BestFeatures from '../component/Best';
+
 
 const Home = () => {
     const statsData = {
@@ -47,6 +49,7 @@ const Home = () => {
             <ModeratorsShowcase></ModeratorsShowcase>
             <Feedback></Feedback>
             <FeedbackSection />
+          
         </div>
     );
 };

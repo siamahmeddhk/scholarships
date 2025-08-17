@@ -96,6 +96,14 @@ const Nav = () => {
             </Link>
             {user && (
               <Link
+                to="/help"
+                className="font-semibold hover:text-amber-300 transition-colors"
+              >
+                Helpdesk
+              </Link>
+            )}
+            {user && (
+              <Link
                 to="/dashboard"
                 className="font-semibold hover:text-amber-300 transition-colors"
               >

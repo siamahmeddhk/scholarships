@@ -36,6 +36,7 @@ import Modpro from "../Home/Modarators/Modpro";
 import Admin from "../Home/Admin/Admin";
 import Adminpro from "../Home/Admin/Adminpro";
 import HowItWorks from "../component/HowItWorks";
+import Helpdesk from "../component/Helpdesk";
 
 
 export const router = createBrowserRouter([
@@ -51,6 +52,7 @@ export const router = createBrowserRouter([
       { path: "/register", element: <Register /> },
       { path: "/login", element: <Login /> },
       { path: "/apply/:id", element: <ApplyScholarship /> },
+      { path: "/help", element: <Helpdesk /> },
     ],
   },
   {
